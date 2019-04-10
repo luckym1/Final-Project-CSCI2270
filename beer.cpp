@@ -12,6 +12,8 @@
 
 using namespace std;
 
+//constructor that allocates dynamic memory and initializes private variables
+//alloc and dealloc are for memory leak debug
 Hash::Hash(int maxSize){
     if (maxSize > 0) {
         TableSize = maxSize;
@@ -25,6 +27,7 @@ Hash::Hash(int maxSize){
     currSize = 0;
     //dealloc = 0;
 }
+//free's all allocated memory by the constructor and insert function
 Hash::~Hash(void){
     for (int i = 0; i < TableSize; i++) {
         if (table[i]) {
@@ -47,6 +50,7 @@ Hash::~Hash(void){
      }
      */
 }
+// returns a hash key based on a string and the max table size
 int Hash::hash(string key){
     int hashValue = 5381 ;
     size_t length = key.length();
@@ -56,6 +60,11 @@ int Hash::hash(string key){
     hashValue %= TableSize;
     return hashValue;
 }
+//input: beerRecipe structed with all members initialized
+//takes the name of the beer and hash's, creates a dynamic node and copies
+// given struct to it, then inserts it into a chained hash table
+//output: full initialized structed allocated in dynamic memory with and placed
+//properly in the hash table
 void Hash::insert(recipe beerRecipe){
     int index = hash(beerRecipe.name);
     if (index >= 0 && index < TableSize) {
@@ -127,6 +136,11 @@ void Hash::insert(recipe beerRecipe){
         currSize++;
     }
 }
+//Input: key that can be any variable of string type and the name of the variable to search
+//Output: pointer to the recipe that contains the given key
+//**** need to update ***
+//needs to return a vector of pointers to ALL recipies that contain the given key, right now it only 
+//returns the first one
 recipe * Hash::search(string key, string parameter){
     int s = 0;
     if (parameter == "name" || parameter == "Name") {
@@ -244,16 +258,22 @@ recipe * Hash::search(string key, string parameter){
     }
     return nullptr;
 }
+//Overloaded function to search for variables that are double type
+//Input: double type variable and string of name of variable
+//Output: vector of pointers to recipes that contain the key
 recipe * Hash::search(double key, string parameter){
     return nullptr;
 }
+//input: name of recipe to delete
+//output: memory previously allocated for string is deallocated and 
 void Hash::del(string key){
     int index = hash(key);
-    if (index >= 0 && index < TableSize) {
+    if (index >= 0 && index < TableSize && table[index]) {
         if (table[index]->name == key) {
             recipe * temp = table[index];
             table[index] = table[index]->next;
             delete temp;
+            temp = nullptr;
             //dealloc++;
             //currSize--;
         }else{
@@ -262,6 +282,7 @@ void Hash::del(string key){
                 if (pointer->name == key) {
                     chaser->next = pointer->next;
                     delete pointer;
+                    pointer = nullptr;
                     //dealloc++;
                     //currSize--;
                     break;
