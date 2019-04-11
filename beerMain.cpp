@@ -10,7 +10,7 @@ using namespace std;
 
 
 int main(int argc, char const *argv[]) {
-    
+
     /*
      -------------- READING IN DATA  -----------------------------------------
      */
@@ -23,12 +23,12 @@ int main(int argc, char const *argv[]) {
     string cell;
     ifstream recipeList;
     vector <string> lineVector;
-    
+
     //------------------------ variables for the recipe struct ---------------
     string styleOfBeer;
     recipe newRecipe;
     Style newStyle;
-    
+
     // ------------------------- End Varibles for the recipe struct ------------
     Hash recipeHash(5000);
     StyleHash styleHash;
@@ -107,15 +107,16 @@ int main(int argc, char const *argv[]) {
             exit(0);
         }
         newRecipe.description2 = lineVector[26];
-        
-        newStyle.name = styleOfBeer;
+
+        newStyle.name = newRecipe.style;
+        //cout<<newStyle.name<<endl;
         //newRecipe.ingredients = beerIngredients; // need to change ADT
         //cout<<newRecipe.name;
         recipeHash.insert(newRecipe);
         styleHash.addStyle(newStyle, newRecipe);
     }
-    
-    
+
+
     /*
      -------------- END READING IN DATA  --------------------------------------
      *************************************************************************
@@ -132,12 +133,12 @@ int main(int argc, char const *argv[]) {
     cout<<"~                                                      ~"<<endl;
     cout<<"********************************************************"<<endl;
     cout<<endl;
-    
-    
+
+
     bool run = true;
     string userInput;
     int userInputInt;
-    
+
     while(run){
         cout<<"-------------------    Main Menu    --------------------"<<endl;
         cout<<"                                                        | "<<endl;
@@ -156,7 +157,7 @@ int main(int argc, char const *argv[]) {
         }catch(invalid_argument){
             cout << "Input must be a integer number" << endl;
         }
-        
+
         switch (userInputInt) {
             case 1:{
                 cout<<endl;
@@ -170,10 +171,10 @@ int main(int argc, char const *argv[]) {
                 }else{
                     cout << "Not found in list" << endl;
                 }
-                
+
                 break;
             }
-                
+
                 //----------------- MAIN CASE 2 ---------------------------------------
             case 2:
                 cout<<endl;
@@ -214,6 +215,7 @@ int main(int argc, char const *argv[]) {
                         cout<<"Enter the style of the beer: "<<endl;
                         cout<<">>";
                         getline(cin, userInput);
+                        styleHash.searchStyles(userInput);
                         break;
                     case 3:{
                         cout<<endl;
@@ -335,7 +337,7 @@ int main(int argc, char const *argv[]) {
                         break;
                 }
                 break;
-                
+
                 //----------------- MAIN CASE 3 ---------------------------------------
             case 3:{
                 // ADD a Recipe .... FML, this is going to be a long one
@@ -681,7 +683,7 @@ int main(int argc, char const *argv[]) {
                 getline(cin, userInput);
                 recipeHash.del(userInput);
                 break;
-                
+
                 //----------------- MAIN CASE 5 ---------------------------------------
             case 5:
                 cout<<endl;
@@ -700,10 +702,10 @@ int main(int argc, char const *argv[]) {
                     recipeHash.print();
                 }
                 break;
-                
+
                 //----------------- MAIN CASE 6 ---------------------------------------
             case 6:
-                
+
                 run = false;
                 break;
         }

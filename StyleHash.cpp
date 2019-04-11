@@ -24,6 +24,7 @@ void StyleHash::addStyle(Style beerStyle, recipe beerRecipe){
   // need to figure out something with vectors
   int indexForHashTable = getHash(beerStyle.name);
   bool placed = false;
+  //cout<<beerStyle.name<<endl;
   if(hashtable[indexForHashTable] == nullptr)
   {
     // then I can add in the style
@@ -123,11 +124,40 @@ unsigned int StyleHash::getHash(string styleName){
   return hashValue;
 }
 
-Style* StyleHash::searchStyles(string styleName){
+void StyleHash::searchStyles(string styleName){
   int index = getHash(styleName);
   if(styleName == hashtable[index] -> name){
-    return hashtable[index];
-  }
-  return NULL;
+    cout<<"________________________________________________________"<<endl;
+    cout<<"  STYLE:                                                |"<<endl;
+    cout<<"                                                        |"<<endl;
+    cout<<"  "<<hashtable[index] -> name<<"                         "<<endl;
+    cout<<"                                                        |"<<endl;
+    cout<<"========================================================"<<endl;
+    cout<<"  Beer within Style:                                     "<<endl;
+    cout<<"                                                         "<<endl;
+    for(int i = 0; i<hashtable[index]->listOfRecipes.size(); i++){
+      cout<<"   "<<hashtable[index]->listOfRecipes[i].name<<endl;
+    }
 
-}
+  }
+    else{
+      // then I need to parse through the list and check to see if it is there.
+      for(int j = 0; j<hashtableSize; j++){
+        if(styleName == hashtable[j] -> name){
+          cout<<"________________________________________________________"<<endl;
+          cout<<"  STYLE:                                                |"<<endl;
+          cout<<"                                                        |"<<endl;
+          cout<<"  "<<hashtable[j] -> name<<"                            "<<endl;
+          cout<<"                                                        |"<<endl;
+          cout<<"========================================================"<<endl;
+          cout<<"  Beer within Style:                                     "<<endl;
+          cout<<"                                                         "<<endl;
+          for(int i = 0; i<hashtable[j]->listOfRecipes.size(); i++){
+            cout<<"   "<<hashtable[j]->listOfRecipes[i].name<<endl;
+          }
+          return;
+        }
+      }
+      cout<<"Style not found"<<endl;
+    }
+  }
