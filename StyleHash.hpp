@@ -19,11 +19,10 @@ class StyleHash{
     bool isInTable(string name);
     int getNumberCollisions();
     void printStyleList();
+    void searchStyles(string styleName);
 
   private:
     unsigned int getHash(string styleName);
-    Style* searchStyles(string styleName);
-
     // Instance variables
     Style **hashtable;
     int numCollisions;

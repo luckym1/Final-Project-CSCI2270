@@ -48,7 +48,7 @@ int Hash::hash(string key){
 void Hash::insert(recipe beerRecipe){
     int index = hash(beerRecipe.name);
     if (index >= 0 && index < TableSize) {
-        
+
         if (!table[index]) {
             table[index] = new recipe;
             alloc++;
