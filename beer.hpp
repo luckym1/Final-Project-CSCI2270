@@ -54,7 +54,7 @@ public:
     //Input: string or double and a string of the parameter type to search
     //Output: vector of recipe's that contain the given parameter
     recipe * search(string key, string parameter);
-    recipe * search(double key, string parameter);
+    vector<recipe *> search(double key, string parameter);
     
     //Input: string to name of recipe
     //Output: Recipe struct removed from hash table, memory deallocated

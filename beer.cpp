@@ -244,8 +244,45 @@ recipe * Hash::search(string key, string parameter){
 //Overloaded function to search for variables that are double type
 //Input: double type variable and string of name of variable
 //Output: vector of pointers to recipes that contain the key
-recipe * Hash::search(double key, string parameter){
-    return nullptr;
+vector<recipe *> Hash::search(double key, string parameter){
+    int s = 0;
+    vector<recipe *> recipes;
+    recipes.clear();
+    if (parameter == "minIBU" || parameter == "minimum IBU") {
+        s = 1;
+    }else if (parameter == "maxIBU" || parameter == "maximum IBU"){
+        s = 2;
+    }
+    switch (s) {
+        case 1:{
+            for (int i = 0; i < TableSize; i++) {
+                recipe * pointer = table[i];
+                while (pointer) {
+                    if (pointer->minIBU >= key) {
+                        recipes.push_back(pointer);
+                    }
+                    pointer = pointer->next;
+                }
+            }
+            break;
+        }
+        case 2:{
+            for (int i = 0; i < TableSize; i++) {
+                recipe * pointer = table[i];
+                while (pointer) {
+                    if (pointer->maxIBU <= key) {
+                        recipes.push_back(pointer);
+                    }
+                    pointer = pointer->next;
+                }
+            }
+            break;
+        }
+        default:
+            cout << "not a vaild parameter" << endl;
+            break;
+    }
+    return recipes;
 }
 //input: name of recipe to delete
 //output: memory previously allocated for string is deallocated and

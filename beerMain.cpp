@@ -191,11 +191,18 @@ int main(int argc, char const *argv[]) {
                 cout<<">> ";
                 getline(cin, userInput);
                 switch (stoi(userInput)) {
-                    case 1:
+                    case 1:{
                         cout<<endl;
                         cout<<"Enter the name of the beer: "<<endl;
                         cout<<">>";
-                        
+                        getline(cin, userInput);
+                        recipe * search = recipeHash.search(userInput, "name");
+                        if (search) {
+                            recipeHash.printRecipe(search);
+                        }else{
+                            cout << "Name not in data-base." << endl;
+                        }
+                    }
                         break;
                     case 2:
                         cout<<endl;
@@ -207,9 +214,58 @@ int main(int argc, char const *argv[]) {
                         cout<<endl;
                         cout<<"Search for minimum IBU or maximum IBU? "<<endl;
                         cout<<"1) Minimum IBU "<<endl;
-                        cout<<"2) MAximum IBU "<<endl;
+                        cout<<"2) Maximum IBU "<<endl;
                         cout<<">>";
                         getline(cin, userInput);
+                        int _userInput;
+                        double key;
+                        try {
+                            _userInput = stoi(userInput);
+                        } catch (invalid_argument) {
+                            cout << "Input must be an integer" << endl;
+                        }
+                        switch (_userInput) {
+                            case 1:{
+                                cout << "Enter minimum IBU" << endl;
+                                cout << ">>";
+                                getline(cin, userInput);
+                                try {
+                                    key = stod(userInput);
+                                } catch (invalid_argument) {
+                                    cout << "Input must be a number" << endl;
+                                }
+                                vector<recipe *> IBU = recipeHash.search(key, "minimum IBU");
+                                if (!IBU.empty()) {
+                                    for (int i = 0; i < IBU.size(); i++) {
+                                        recipeHash.printRecipe(IBU[i]);
+                                    }
+                                }else{
+                                    cout << "No recipies found with that parameter" << endl;
+                                }
+                            }
+                                break;
+                            case 2:{
+                                cout << "Enter maximum IBU" << endl;
+                                cout << ">>";
+                                getline(cin, userInput);
+                                try {
+                                    key = stod(userInput);
+                                } catch (invalid_argument) {
+                                    cout << "Input must be a number" << endl;
+                                }
+                                vector<recipe *> IBU = recipeHash.search(key, "maximum IBU");
+                                if (!IBU.empty()) {
+                                    for (int i = 0; i < IBU.size(); i++) {
+                                        recipeHash.printRecipe(IBU[i]);
+                                    }
+                                }else{
+                                    cout << "No recipies found with that parameter" << endl;
+                                }
+                            }
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case 4:
                         cout<<endl;
