@@ -79,6 +79,7 @@ void Hash::insert(recipe beerRecipe){
             table[index]->FGmessured = beerRecipe.FGmessured;
             table[index]->ingredients = beerRecipe.ingredients;
             table[index]->description2 = beerRecipe.description2;
+            table[index]->examples = beerRecipe.examples;
             cout << beerRecipe.name << " inserted" << endl;
         }else{
             recipe * pointer = table[index]->next, * chaser = table[index];
@@ -290,28 +291,32 @@ void Hash::del(string key){
     int index = hash(key);
     if (index >= 0 && index < TableSize && table[index]) {
         if (table[index]->name == key) {
+            cout << table[index]->name << " deleted" << endl;
             recipe * temp = table[index];
             table[index] = table[index]->next;
             delete temp;
             temp = nullptr;
             dealloc++;
             currSize--;
+            return;
         }else{
             recipe * pointer = table[index]->next, * chaser = table[index];
             while (pointer) {
                 if (pointer->name == key) {
                     chaser->next = pointer->next;
+                    cout << pointer->name << " deleted" << endl;
                     delete pointer;
                     pointer = nullptr;
                     dealloc++;
                     currSize--;
-                    break;
+                    return;
                 }
                 chaser = pointer;
                 pointer = pointer->next;
             }
         }
     }
+    cout << "Could not find recipe to delete" << endl;
 }
 void Hash::printRecipe(recipe * rec){
     cout << "Name: " << rec->name << " | Style: " << rec->style <<  endl;
@@ -331,6 +336,7 @@ void Hash::printRecipe(recipe * rec){
     cout << "PH: " << rec->PH << endl;
     cout << "Age Time: " << rec->age << " days" << endl;
     cout << "Measured OG: " << rec->OGmessured << " Measured FG: " << rec->FGmessured << endl;
+    cout << "Examples: " << rec->examples << endl;
     cout << "Comments: " << rec->description2 << endl;
 }
 void Hash::print(){

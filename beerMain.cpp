@@ -190,7 +190,12 @@ int main(int argc, char const *argv[]) {
                 cout<<"________________________________________________________"<<endl;
                 cout<<">> ";
                 getline(cin, userInput);
-                switch (stoi(userInput)) {
+                try{
+                    userInputInt = stoi(userInput);
+                }catch(invalid_argument){
+                    cout << "Input must be a integer number" << endl;
+                }
+                switch (userInputInt) {
                     case 1:{
                         cout<<endl;
                         cout<<"Enter the name of the beer: "<<endl;
@@ -210,7 +215,7 @@ int main(int argc, char const *argv[]) {
                         cout<<">>";
                         getline(cin, userInput);
                         break;
-                    case 3:
+                    case 3:{
                         cout<<endl;
                         cout<<"Search for minimum IBU or maximum IBU? "<<endl;
                         cout<<"1) Minimum IBU "<<endl;
@@ -267,39 +272,414 @@ int main(int argc, char const *argv[]) {
                                 break;
                         }
                         break;
-                    case 4:
+                    }
+                    case 4:{
                         cout<<endl;
                         cout<<"Search for minimum ABV or maximum ABV? "<<endl;
                         cout<<"1) Minimum ABV "<<endl;
-                        cout<<"2) MAximum ABV "<<endl;
+                        cout<<"2) Maximum ABV "<<endl;
                         cout<<">>";
                         getline(cin, userInput);
+                        int _userInput;
+                        double key;
+                        try {
+                            _userInput = stoi(userInput);
+                        } catch (invalid_argument) {
+                            cout << "Input must be an integer" << endl;
+                        }
+                        switch (_userInput) {
+                            case 1:{
+                                cout << "Enter minimum ABV" << endl;
+                                cout << ">>";
+                                getline(cin, userInput);
+                                try {
+                                    key = stod(userInput);
+                                } catch (invalid_argument) {
+                                    cout << "Input must be a number" << endl;
+                                }
+                                vector<recipe *> ABV = recipeHash.search(key, "minimum ABV");
+                                if (!ABV.empty()) {
+                                    for (int i = 0; i < ABV.size(); i++) {
+                                        recipeHash.printRecipe(ABV[i]);
+                                    }
+                                }else{
+                                    cout << "No recipies found with that parameter" << endl;
+                                }
+                            }
+                                break;
+                            case 2:{
+                                cout << "Enter maximum ABV" << endl;
+                                cout << ">>";
+                                getline(cin, userInput);
+                                try {
+                                    key = stod(userInput);
+                                } catch (invalid_argument) {
+                                    cout << "Input must be a number" << endl;
+                                }
+                                vector<recipe *> ABV = recipeHash.search(key, "maximum ABV");
+                                if (!ABV.empty()) {
+                                    for (int i = 0; i < ABV.size(); i++) {
+                                        recipeHash.printRecipe(ABV[i]);
+                                    }
+                                }else{
+                                    cout << "No recipies found with that parameter" << endl;
+                                }
+                            }
+                                break;
+                            default:
+                                break;
+                        }
                         break;
+                    }
                     case 5:
                         break;
                 }
                 break;
                 
                 //----------------- MAIN CASE 3 ---------------------------------------
-            case 3:
+            case 3:{
                 // ADD a Recipe .... FML, this is going to be a long one
+                userInput = " ";
+                recipe in;
+                double i = 0;
                 cout<<endl;
                 cout<<"Please enter the following information as it is given"<<endl;
                 cout<<"If you do not know the question, leave it blank"<<endl;
                 cout<<endl;
                 cout<<"________________________________________________________"<<endl;
                 cout<<"1. What is the name of the beer? "<<endl;
-                
+                getline(cin, userInput);
+                in.name = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"2. What is the name of the brewer? "<<endl;
+                getline(cin, userInput);
+                in.brewer = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"3. What is the date brewed? "<<endl;
+                getline(cin, userInput);
+                in.date = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"4. What special equipment was used? "<<endl;
+                getline(cin, userInput);
+                in.equipment = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"5. What is the style of the beer? "<<endl;
+                getline(cin, userInput);
+                in.style = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"6. What is the category of the beer? "<<endl;
+                getline(cin, userInput);
+                in.category = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"7. Please enter a description:"<<endl;
+                getline(cin, userInput);
+                in.description1 = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"8. Please enter the ingredients:"<<endl;
+                getline(cin, userInput);
+                in.ingredients = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"9. What is the minimum original gravity (OG)? "<<endl;
+                bool input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.minOG = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"10. What is the maximum original gravity (OG)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.maxOG = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"11. What is the minimum final gravity (FG)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.minFG = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"12. What is the maximum final gravity (FG)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.maxFG = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"13. What is the minimum international bitterness units (IBU)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.minIBU = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"14. What is the maximum international bitterness units (IBU)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.maxIBU = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"15. What is the minimum alcohol by volume (ABV)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.minABV = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"16. What is the maximum alcohol by volume (ABV)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.maxABV = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"17. What is the minimum carbination? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.minCarb = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"18. What is the maximum carbination? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.maxCarb = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"19. What is the grain weight in lbs? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.grainWeight = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"20. What is the grain tempature in degrees Fahrenheit (F)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.grainTemp = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"21. What is the boil tempature in degrees Fahrenheit (F)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.boilTemp = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"22. What is the PH? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.PH = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"23. What is the maturing age in days? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.age = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"24. What was the measured original gravity (OG)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.OGmessured = i;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"25. What was the measured final gravity (FG)? "<<endl;
+                input = true;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        i = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be a number, please input a number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                }
+                in.FGmessured = i;
+                i = 0;
+                i = 0;
+                cout<<"________________________________________________________"<<endl;
+                cout<<"26. Please enter examples of this beer:"<<endl;
+                getline(cin, userInput);
+                in.examples = userInput;
+                userInput.clear();
+                cout<<"________________________________________________________"<<endl;
+                cout<<"27. Please enter any additional comments:"<<endl;
+                getline(cin, userInput);
+                in.description2 = userInput;
+                userInput.clear();
+                recipeHash.insert(in);
                 break;
-                
+            }
                 //----------------- MAIN CASE 4 ---------------------------------------
             case 4:
                 // delete a recipe
                 cout<<endl;
-                cout<<"What is the name of the beer recipe you would like to delete? ";
+                cout<<"What is the name of the beer recipe you would like to delete? " << endl;
                 cout<<">> ";
                 getline(cin, userInput);
-                //search the recipe list for the name
+                recipeHash.del(userInput);
                 break;
                 
                 //----------------- MAIN CASE 5 ---------------------------------------
