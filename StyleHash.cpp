@@ -112,7 +112,7 @@ void StyleHash::printStyleList(){
 
 unsigned int StyleHash::getHash(string styleName){
   unsigned int hashValue = 5380;
-  int length = styleName.length();
+  int length = (int)styleName.length();
   for (int i=0;i<length;i++)
   {
     hashValue=((hashValue<<5)+hashValue) + styleName[i];

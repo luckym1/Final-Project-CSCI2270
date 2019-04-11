@@ -18,37 +18,17 @@ Hash::Hash(int maxSize){
     if (maxSize > 0) {
         TableSize = maxSize;
     }
-    //alloc = 0;
+    alloc = 0;
     table = new recipe * [TableSize];
-    //alloc++;
+    alloc++;
     for (int i = 0; i < TableSize; i++) {
         table[i] = nullptr;
     }
     currSize = 0;
-    //dealloc = 0;
+    dealloc = 0;
 }
 //free's all allocated memory by the constructor and insert function
 Hash::~Hash(void){
-    for (int i = 0; i < TableSize; i++) {
-        if (table[i]) {
-            recipe * pointer = table[i], * previous = nullptr;
-            while (pointer) {
-                previous = pointer;
-                //cout << previous->ikey << " deleted" << endl;
-                delete previous;
-                pointer = pointer->next;
-                //dealloc++;
-            }
-        }
-    }
-    delete [] table;
-    //dealloc++;
-    /*    if (!(alloc - dealloc)) {
-     cout << "All memory freed" << endl;
-     }else{
-     cout << "memory leak" << endl;
-     }
-     */
 }
 // returns a hash key based on a string and the max table size
 int Hash::hash(string key){
@@ -58,7 +38,7 @@ int Hash::hash(string key){
         hashValue=((hashValue << 5)+hashValue) + key[i];
     }
     hashValue %= TableSize;
-    return hashValue;
+    return abs(hashValue);
 }
 //input: beerRecipe structed with all members initialized
 //takes the name of the beer and hash's, creates a dynamic node and copies
@@ -71,14 +51,15 @@ void Hash::insert(recipe beerRecipe){
         
         if (!table[index]) {
             table[index] = new recipe;
-            //alloc++;
+            alloc++;
             table[index]->next = nullptr;
             table[index]->name = beerRecipe.name;
             table[index]->brewer = beerRecipe.brewer;
+            table[index]->date = beerRecipe.date;
             table[index]->equipment = beerRecipe.equipment;
             table[index]->style = beerRecipe.style;
             table[index]->category = beerRecipe.category;
-            table[index]->description = beerRecipe.description;
+            table[index]->description1 = beerRecipe.description1;
             table[index]->minOG = beerRecipe.minOG;
             table[index]->maxOG = beerRecipe.maxOG;
             table[index]->minFG = beerRecipe.minFG;
@@ -97,7 +78,8 @@ void Hash::insert(recipe beerRecipe){
             table[index]->OGmessured = beerRecipe.OGmessured;
             table[index]->FGmessured = beerRecipe.FGmessured;
             table[index]->ingredients = beerRecipe.ingredients;
-            //cout << key << " inserted" << endl;
+            table[index]->description2 = beerRecipe.description2;
+            cout << beerRecipe.name << " inserted" << endl;
         }else{
             recipe * pointer = table[index]->next, * chaser = table[index];
             while (pointer) {
@@ -109,10 +91,11 @@ void Hash::insert(recipe beerRecipe){
             chaser->next->next = nullptr;
             chaser->next->name = beerRecipe.name;
             chaser->next->brewer = beerRecipe.brewer;
+            chaser->next->date = beerRecipe.date;
             chaser->next->equipment = beerRecipe.equipment;
             chaser->next->style = beerRecipe.style;
             chaser->next->category = beerRecipe.category;
-            chaser->next->description = beerRecipe.description;
+            chaser->next->description1 = beerRecipe.description1;
             chaser->next->minOG = beerRecipe.minOG;
             chaser->next->maxOG = beerRecipe.maxOG;
             chaser->next->minFG = beerRecipe.minFG;
@@ -131,7 +114,8 @@ void Hash::insert(recipe beerRecipe){
             chaser->next->OGmessured = beerRecipe.OGmessured;
             chaser->next->FGmessured = beerRecipe.FGmessured;
             chaser->next->ingredients = beerRecipe.ingredients;
-            //cout << key << " chained" << endl;
+            chaser->next->description2 = beerRecipe.description2;
+            cout << beerRecipe.name << " chained" << endl;
         }
         currSize++;
     }
@@ -139,7 +123,7 @@ void Hash::insert(recipe beerRecipe){
 //Input: key that can be any variable of string type and the name of the variable to search
 //Output: pointer to the recipe that contains the given key
 //**** need to update ***
-//needs to return a vector of pointers to ALL recipies that contain the given key, right now it only 
+//needs to return a vector of pointers to ALL recipies that contain the given key, right now it only
 //returns the first one
 recipe * Hash::search(string key, string parameter){
     int s = 0;
@@ -229,7 +213,7 @@ recipe * Hash::search(string key, string parameter){
             for (int i = 0; i < TableSize; i++) {
                 recipe * pointer = table[i];
                 while (pointer) {
-                    if (pointer->description == key) {
+                    if (pointer->description1 == key) {
                         return pointer;
                     }else{
                         pointer = pointer->next;
@@ -242,12 +226,11 @@ recipe * Hash::search(string key, string parameter){
             for (int i = 0; i < TableSize; i++) {
                 recipe * pointer = table[i];
                 while (pointer) {
-                    for (int i = 0; i < pointer->ingredients.size(); i++) {
-                        if (pointer->ingredients[i] == key) {
-                            return pointer;
-                        }
+                    if (pointer->ingredients == key) {
+                        return pointer;
+                    }else{
+                        pointer = pointer->next;
                     }
-                    pointer = pointer->next;
                 }
             }
             break;
@@ -265,7 +248,7 @@ recipe * Hash::search(double key, string parameter){
     return nullptr;
 }
 //input: name of recipe to delete
-//output: memory previously allocated for string is deallocated and 
+//output: memory previously allocated for string is deallocated and
 void Hash::del(string key){
     int index = hash(key);
     if (index >= 0 && index < TableSize && table[index]) {
@@ -274,8 +257,8 @@ void Hash::del(string key){
             table[index] = table[index]->next;
             delete temp;
             temp = nullptr;
-            //dealloc++;
-            //currSize--;
+            dealloc++;
+            currSize--;
         }else{
             recipe * pointer = table[index]->next, * chaser = table[index];
             while (pointer) {
@@ -283,8 +266,8 @@ void Hash::del(string key){
                     chaser->next = pointer->next;
                     delete pointer;
                     pointer = nullptr;
-                    //dealloc++;
-                    //currSize--;
+                    dealloc++;
+                    currSize--;
                     break;
                 }
                 chaser = pointer;
@@ -293,14 +276,32 @@ void Hash::del(string key){
         }
     }
 }
+void Hash::printRecipe(recipe * rec){
+    cout << "Name: " << rec->name << " | Style: " << rec->style <<  endl;
+    cout << "----------------------------------------------------------------------" << endl;
+    cout << "Category: " << rec->category << endl;
+    cout << "Made by: " << rec->brewer<< " on " << rec->date << endl;
+    cout << "Equipment: " << rec->equipment << endl;
+    cout << "Ingredients: " << rec->ingredients << endl;
+    cout << "Description: " << rec->description1 << endl;
+    cout << "OG min: " << rec->minOG << " max: " << rec->maxOG << endl;
+    cout << "FG min: " << rec->minFG << " max: " << rec->maxFG << endl;
+    cout << "IBU min: " << rec->minIBU << " max: " << rec->maxIBU << endl;
+    cout << "Carbination min: " << rec->minCarb << " max: " << rec->maxCarb << endl;
+    cout << "ABV min: " << rec->minABV << " max: " << rec->maxABV << endl;
+    cout << "Grain weight: " << rec->grainWeight << " Grain Temp: " << rec->grainTemp << endl;
+    cout << "Boil Temp: " << rec->boilTemp << endl;
+    cout << "PH: " << rec->PH << endl;
+    cout << "Age Time: " << rec->age << " days" << endl;
+    cout << "Measured OG: " << rec->OGmessured << " Measured FG: " << rec->FGmessured << endl;
+    cout << "Comments: " << rec->description2 << endl;
+}
 void Hash::print(){
     for (int i = 0; i < TableSize; i++) {
         recipe * pointer = table[i];
-        cout << i << ": ";
         while (pointer) {
-            cout << pointer->name << ":" << endl;
+            cout << pointer->name << endl;
             pointer = pointer->next;
         }
-        cout << endl;
     }
 }

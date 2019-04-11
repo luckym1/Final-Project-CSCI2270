@@ -16,10 +16,10 @@ using namespace std;
 
 struct recipe{
     recipe * next;
-    string name, brewer, equipment, style, category, description;
+    string name, brewer, date, equipment, style, category, description1, description2, ingredients, examples;
     double minOG, maxOG, minFG, maxFG, minIBU, maxIBU, minCarb, maxCarb, minABV;
     double maxABV, grainWeight, grainTemp, boilTemp, PH, age, OGmessured, FGmessured;
-    vector <string> ingredients;
+
 };
 
 class Hash{
@@ -50,15 +50,17 @@ public:
     //        place in hash table
     void insert(recipe beerRecipe);
     
-    //Overloaded function 
+    //Overloaded function
     //Input: string or double and a string of the parameter type to search
     //Output: vector of recipe's that contain the given parameter
     recipe * search(string key, string parameter);
     recipe * search(double key, string parameter);
     
     //Input: string to name of recipe
-    //Output: Recipe struct removed from hash table, memory deallocated 
+    //Output: Recipe struct removed from hash table, memory deallocated
     void del(string name);
+    
+    void printRecipe(recipe * rec);
     
     //Input: must have a initialized Hash object
     //Output: Printed to screen the number of each "bucket" in the hash array
