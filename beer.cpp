@@ -80,6 +80,7 @@ void Hash::insert(recipe beerRecipe){
             table[index]->ingredients = beerRecipe.ingredients;
             table[index]->description2 = beerRecipe.description2;
             table[index]->examples = beerRecipe.examples;
+            //table[index]->csvRow = currSize;
             cout << beerRecipe.name << " inserted" << endl;
         }else{
             recipe * pointer = table[index]->next, * chaser = table[index];
@@ -116,6 +117,7 @@ void Hash::insert(recipe beerRecipe){
             chaser->next->FGmessured = beerRecipe.FGmessured;
             chaser->next->ingredients = beerRecipe.ingredients;
             chaser->next->description2 = beerRecipe.description2;
+            //chaser->next->csvRow = currSize;
             cout << beerRecipe.name << " chained" << endl;
         }
         currSize++;

@@ -3,13 +3,151 @@
 #include <sstream>
 #include <fstream>
 #include "beer.hpp"
+#include <stdio.h>
 
 #define NCOLS 26 //number of items in each line to read in
 
 using namespace std;
 
+void writeFiles(recipe * r, string fileIn, string fileOut){
 
-int main(int argc, char const *argv[]) {
+  int count = 0;
+  cout<<"Recipe "<< r -> name<<endl;
+  ifstream fin;
+  ofstream fout;
+  fin.open(fileIn);
+  fout.open(fileOut);
+  vector<string> row;
+  string line, word;
+  while(!fin.eof()){
+    row.clear();
+    getline(fin, line, '\n');
+    //cout<<"Line: "<<line<<endl;
+    stringstream s(line);
+    while(getline(s, word, ',')){
+      row.push_back(word);
+      cout<<word<<" ";
+    }
+    cout<<endl;
+    string myRecipe = row[0];
+    int rowSize = row.size();
+    // If we found the recipe we are changing:
+    //cout<<"My Recipe "<<r -> name << " compared to : "<<myRecipe<<endl;
+    if(myRecipe == r -> name){
+      count = 1;
+      row[0] = r -> name;
+      cout<<row[0]<<endl;
+      row[1] = r -> brewer;
+      row[2] = r -> date;
+      row[3] = r -> equipment;
+      row[4] = r -> style;
+      row[5] = r -> category;
+      try
+      {
+        stringstream convert;
+        convert << r -> minOG;
+        row[6] = convert.str();
+        convert.str(std::string());
+        convert << r -> maxOG;
+        row[7] = convert.str();
+        convert.str(std::string());
+        convert << r -> minFG;
+        row[8] = convert.str();
+        convert.str(std::string());
+        convert << r -> maxFG;
+        row[9] = convert.str();
+        convert.str(std::string());
+        convert << r -> minIBU;
+        row[10] = convert.str();
+        convert.str(std::string());
+        convert << r -> maxIBU;
+        row[11] = convert.str();
+        convert.str(std::string());
+        convert << r -> minCarb;
+        row[12] = convert.str();
+        convert.str(std::string());
+        convert << r -> maxCarb;
+        row[13] = convert.str();
+        convert.str(std::string());
+        convert << r -> minABV;
+        row[14] = convert.str();
+        convert.str(std::string());
+        convert << r -> maxABV;
+        row[15] = convert.str();
+        convert.str(std::string());
+      }
+      catch(invalid_argument)
+      {
+        cout << "invalid string conversion" << endl;
+        exit(0);
+      }
+      row[16] = r -> description1;
+      row[17] = r -> ingredients;
+      row[18] = r -> examples;
+      try
+      {
+        stringstream convert2;
+        convert2 << r -> grainWeight;
+        row[19] = convert2.str();
+        convert2.str(std::string());
+        convert2 << r -> grainTemp;
+        row[20] = convert2.str();
+        convert2.str(std::string());
+        convert2 << r -> boilTemp;
+        row[21] = convert2.str();
+        convert2.str(std::string());
+        convert2 << r -> PH;
+        row[22] = convert2.str();
+        convert2.str(std::string());
+        convert2 << r -> age;
+        row[23] = convert2.str();
+        convert2.str(std::string());
+        convert2 << r -> OGmessured;
+        row[24] = convert2.str();
+        convert2.str(std::string());
+        convert2 << r -> FGmessured;
+        row[25] = convert2.str();
+        convert2.str(std::string());
+      }catch(invalid_argument){
+          cout << "invalid string conversion" << endl;
+          exit(0);
+      }
+      row[26] = r -> description2;
+
+      if(!fin.eof()){
+        for(int k = 0; k < rowSize - 1; k++){
+          fout << row[k] << ", ";
+        }
+        fout<< row[rowSize - 1] << "\n";
+      }
+    }
+
+    else{
+      if(!fin.eof()){
+        for(int k = 0; k < rowSize - 1; k++){
+          fout << row[k] << ", ";
+        }
+        fout << row[rowSize - 1] << "\n";
+      }
+    }
+    if (fin.eof())
+            break;
+  }
+  if (count == 0)
+        cout << "Record not found\n";
+
+    fin.close();
+    fout.close();
+    string name = fileIn;
+    remove("beer_recipe_list.csv");
+    rename("recipeCopy.csv", "beer_recipe_list.csv");
+
+}
+
+////// ----------------------  MAIN ------------------------------------- //////
+
+
+int main(int argc, char *argv[]) {
 
     /*
      -------------- READING IN DATA  -----------------------------------------
@@ -23,6 +161,11 @@ int main(int argc, char const *argv[]) {
     string cell;
     ifstream recipeList;
     vector <string> lineVector;
+    string userOGString;
+    string userFGString;
+    double userOG;
+    double userFG;
+    double abv;
 
     //------------------------ variables for the recipe struct ---------------
     string styleOfBeer;
@@ -115,7 +258,10 @@ int main(int argc, char const *argv[]) {
         recipeHash.insert(newRecipe);
         styleHash.addStyle(newStyle, newRecipe);
     }
-
+    //close file reading.
+    recipeList.close();
+    //ofstream writeToFile;
+    //writeToFile.open(argv[1]);
 
     /*
      -------------- END READING IN DATA  --------------------------------------
@@ -168,6 +314,30 @@ int main(int argc, char const *argv[]) {
                 recipe * found = recipeHash.search(userInput, "name");
                 if (found) {
                     recipeHash.printRecipe(found);
+                    cout<<"What is your Original Gravity (O.G.) and Final Gravity (F.G.)?"<<endl;
+                    cout<<">> O.G.: ";
+                    getline(cin, userOGString);
+                    cout<<">> F.G.: ";
+                    getline(cin, userFGString);
+                    try{
+                      userOG = stod(userOGString);
+                      userFG = stod(userFGString);
+                    }catch(invalid_argument){
+                      cout<< "O.G. and F.G. should be numerical values."<<endl;
+                      break;
+                    }
+                    cout<<"Based on an O.G. of "<<userOG<<" and an F.G. of "<<userFG<<endl;
+                    cout<<"The ABV of your "<<found -> name <<" is : ";
+                    abv = (userOG - userFG) * 131.25;
+                    cout<<abv<<"%"<<endl;
+                    //NOW we need to save it to the csv file.
+                    // first update the recipe.
+                    found -> OGmessured = userOG;
+                    found -> FGmessured = userFG;
+                    //recipeList.open(argv[1]);
+                    writeFiles(found, argv[1], "recipeCopy.csv");
+
+
                 }else{
                     cout << "Not found in list" << endl;
                 }
@@ -672,6 +842,9 @@ int main(int argc, char const *argv[]) {
                 in.description2 = userInput;
                 userInput.clear();
                 recipeHash.insert(in);
+                recipe *in2 = &in;
+
+
                 break;
             }
                 //----------------- MAIN CASE 4 ---------------------------------------

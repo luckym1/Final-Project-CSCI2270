@@ -15,7 +15,6 @@ StyleHash::StyleHash(){
 
 StyleHash::~StyleHash(){
 
-
 }
 
 
