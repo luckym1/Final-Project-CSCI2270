@@ -125,6 +125,9 @@ unsigned int StyleHash::getHash(string styleName){
 
 void StyleHash::searchStyles(string styleName){
   int index = getHash(styleName);
+    if (!hashtable[index]) {
+        return;
+    }
   if(styleName == hashtable[index] -> name){
     cout<<"________________________________________________________"<<endl;
     cout<<"  STYLE:                                                |"<<endl;

@@ -27,7 +27,10 @@ end of the csv.
   vector<string> row;
   string line, word;
   while(!fin.eof()){
-    row.clear();
+      if(!row.empty()){
+          row.clear();
+      }
+      
     getline(fin, line, '\n');
     //cout<<"Line: "<<line<<endl;
     stringstream s(line);
@@ -37,7 +40,7 @@ end of the csv.
     }
     //cout<<endl;
     string myRecipe = row[0];
-    int rowSize = row.size();
+    int rowSize = (int)row.size();
     //cout<<rowSize<<endl;
     // If we found the recipe we are changing:
     //cout<<"My Recipe "<<r -> name << " compared to : "<<myRecipe<<endl;
@@ -465,7 +468,7 @@ int main(int argc, char *argv[]) {
             }
 
                 //----------------- MAIN CASE 2 ---------------------------------------
-            case 2:
+            case 2:{
                 cout<<endl;
                 cout<<"how would you like to search? "<<endl;
                 cout<<endl;
@@ -479,12 +482,24 @@ int main(int argc, char *argv[]) {
                 cout<<"                                                        | "<<endl;
                 cout<<"________________________________________________________"<<endl;
                 cout<<">> ";
-                getline(cin, userInput);
-                try{
-                    userInputInt = stoi(userInput);
-                }catch(invalid_argument){
-                    cout << "Input must be a integer number" << endl;
+                bool input = true;
+                int count = 0;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    try {
+                        userInputInt = stod(userInput);
+                    }catch (invalid_argument) {
+                        cout << "Input must be an integer number, please input an integer number" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                    count++;
+                    if (count > 10) {
+                        break;
+                    }
                 }
+        }
                 switch (userInputInt) {
                     case 1:{
                         cout<<endl;
@@ -969,16 +984,34 @@ int main(int argc, char *argv[]) {
                 break;
             }
                 //----------------- MAIN CASE 4 ---------------------------------------
-            case 4:
+            case 4:{
                 // delete a recipe
                 cout<<endl;
                 cout<<"What is the name of the beer recipe you would like to delete? " << endl;
                 cout<<">> ";
-                getline(cin, userInput);
-                deleteRecipe = recipeHash.search(userInput, "name");
-                writeFiles(deleteRecipe, argv[1], "recipeCopy.csv", false, true);
-                recipeHash.del(userInput);
+                //getline(cin, userInput);
+                bool input = true;
+                int count = 0;
+                while(input){
+                    getline(cin, userInput);
+                    input = false;
+                    deleteRecipe = recipeHash.search(userInput, "name");
+                    if(!deleteRecipe) {
+                        cout << "Recipe not in database, please try again" << endl;
+                        cout << ">>";
+                        input = true;
+                    }
+                    count++;
+                    if (count > 10) {
+                        break;
+                    }
+                }
+                if (deleteRecipe) {
+                    writeFiles(deleteRecipe, argv[1], "recipeCopy.csv", false, true);
+                    recipeHash.del(userInput);
+                }
                 break;
+            }
 
                 //----------------- MAIN CASE 5 ---------------------------------------
             case 5:
